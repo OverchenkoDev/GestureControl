@@ -1,0 +1,95 @@
+﻿<Window x:Class="GestureControl.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GestureControl"
+        mc:Ignorable="d"
+        Title="GestureControl" Height="720" Width="1300" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ObjectDataProvider x:Key="MorphTypes" ObjectType="{x:Type local:CollectionData}" MethodName="GetMorphTypes"/>
+        <ObjectDataProvider x:Key="KernelTypes" ObjectType="{x:Type local:CollectionData}" MethodName="GetKernelTypes"/>
+        <ObjectDataProvider x:Key="KernelSizes" ObjectType="{x:Type local:CollectionData}" MethodName="GetKernelSizes"/>
+        <ObjectDataProvider x:Key="MorphSteps" ObjectType="{x:Type local:CollectionData}" MethodName="GetMorphSteps"/>
+        <ObjectDataProvider x:Key="CannyKernelSizes" ObjectType="{x:Type local:CollectionData}" MethodName="GetCannyKernelSizes"/>
+        <ObjectDataProvider x:Key="ContouringModes" ObjectType="{x:Type local:CollectionData}" MethodName="GetContouringModes"/>
+        <ObjectDataProvider x:Key="ContouringMethods" ObjectType="{x:Type local:CollectionData}" MethodName="GetContouringMethods"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.55*"></RowDefinition>
+            <RowDefinition Height="0.4*"></RowDefinition>
+            <RowDefinition Height="0.07*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.07*"></RowDefinition>
+                <RowDefinition Height="0.93*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"></ColumnDefinition>
+                <ColumnDefinition Width="0.5*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" Content="Processed image"></Label>
+            <Image x:Name="ProcessingVideoBox" Grid.Row="1" Grid.Column="0" Margin="5"></Image>
+            <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" Content="Final view"></Label>
+            <Image x:Name="MainVideoBox" Grid.Row="1" Grid.Column="1" Margin="5"></Image>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.15*"></RowDefinition>
+                <RowDefinition Height="0.2*"></RowDefinition>
+                <RowDefinition Height="0.15*"></RowDefinition>
+                <RowDefinition Height="0.2*"></RowDefinition>
+                <RowDefinition Height="0.15*"></RowDefinition>
+                <RowDefinition Height="0.2*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.25*"></ColumnDefinition>
+                <ColumnDefinition Width="0.25*"></ColumnDefinition>
+                <ColumnDefinition Width="0.25*"></ColumnDefinition>
+                <ColumnDefinition Width="0.25*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="20 0 0 0" FontSize="14" Content="Binarization level"></Label>
+            <Slider x:Name="BiTonalLevel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="20 0 20 0" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0" Maximum="255" Minimum="0" Value="0"></Slider>
+            <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="20 0 0 0" FontSize="14" Content="Blur level"></Label>
+            <Slider x:Name="BlurLevel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="20 0 20 0" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0" Maximum="20" Minimum="1" Value="1"></Slider>
+            <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="20 0 0 0" FontSize="14" Content="Filtration type"></Label>
+            <StackPanel Grid.Row="5" Grid.Column="0" Orientation="Vertical">
+                <RadioButton x:Name="OneStep" Content="One-step" Margin="20 10 0 0" IsChecked="true"></RadioButton>
+                <RadioButton x:Name="TwoStep" Content="Two-step" Margin="20 10 0 0" Checked="TwoStep_Checked" Unchecked="TwoStep_Unchecked"></RadioButton>
+            </StackPanel>
+            <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="20 0 0 0" FontSize="14" Content="Filtration methods"></Label>
+            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                <ComboBox x:Name="FirstMorphType" SelectedValuePath="Key" DisplayMemberPath="Value" ItemsSource="{Binding Source={StaticResource MorphTypes}}" SelectedIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 0 0 0" Width="120" SelectionChanged="FirstMorphType_SelectionChanged"></ComboBox>
+                <ComboBox x:Name="SecondMorphType" SelectedValuePath="Key" DisplayMemberPath="Value" ItemsSource="{Binding Source={StaticResource MorphTypes}}" SelectedIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 0 0 0" Width="120" IsEnabled="False" SelectionChanged="SecondMorphType_SelectionChanged"></ComboBox>
+            </StackPanel>
+            <Label Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="20 0 0 0" FontSize="14" Content="Filtarion kernel type"></Label>
+            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                <ComboBox x:Name="FirstKernelType" SelectedValuePath="Key" DisplayMemberPath="Value" ItemsSource="{Binding Source={StaticResource KernelTypes}}" SelectedIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 0 0 0" Width="120" SelectionChanged="FirstKernelType_SelectionChanged"></ComboBox>
+                <ComboBox x:Name="SecondKernelType" SelectedValuePath="Key" DisplayMemberPath="Value" ItemsSource="{Binding Source={StaticResource KernelTypes}}" SelectedIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 0 0 0" Width="120" IsEnabled="False" SelectionChanged="SecondKernelType_SelectionChanged"></ComboBox>
+            </StackPanel>
+            <Label Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="20 0 0 0" FontSize="14" Content="Filtration kernel size"></Label>
+            <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
+                <ComboBox x:Name="FirstKernelSize" SelectedValuePath="Key" DisplayMemberPath="Value" ItemsSource="{Binding Source={StaticResource KernelSizes}}" SelectedIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 0 0 0" Width="120" SelectionChanged="FirstKernelSize_SelectionChanged"></ComboBox>
+                <ComboBox x:Name="SecondKernelSize" SelectedValuePath="Key" DisplayMemberPath="Value" ItemsSource="{Binding Source={StaticResource KernelSizes}}" SelectedIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 0 0 0" Width="120" IsEnabled="False" SelectionChanged="SecondKernelSize_SelectionChanged"></ComboBox>
+            </StackPanel>
+            <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="20 0 0 0" FontSize="14" Content="Count of iterations"></Label>
+            <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal">
+                <ComboBox x:Name="FirstMorphSteps" SelectedValuePath="Key" DisplayMemberPath="Value" ItemsSource="{Binding Source={StaticResource MorphSteps}}" SelectedIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 0 0 0" Width="120" SelectionChanged="FirstMorphSteps_SelectionChanged"></ComboBox>
+                <ComboBox x:Name="SecondMorphSteps" SelectedValuePath="Key" DisplayMemberPath="Value" ItemsSource="{Binding Source={StaticResource MorphSteps}}" SelectedIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 0 0 0" Width="120" IsEnabled="False" SelectionChanged="SecondMorphSteps_SelectionChanged"></ComboBox>
+            </StackPanel>
+            <Label Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="20 0 0 0" FontSize="14" Content="Edge detection lower treshold"></Label>
+            <Slider x:Name="LowerTresholdLevel" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" Margin="20 0 20 0" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0" Maximum="255" Minimum="0" Value="120" ValueChanged="LowerTresholdLevel_ValueChanged"></Slider>
+            <Label Grid.Row="4" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="20 0 0 0" FontSize="14" Content="Edge detection upper treshold"></Label>
+            <Slider x:Name="UpperTresholdLevel" Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" Margin="20 0 20 0" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0" Maximum="255" Minimum="0" Value="220" ValueChanged="UpperTresholdLevel_ValueChanged"></Slider>
+            <Label Grid.Row="0" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="20 0 0 0" FontSize="14" Content="Edge detection kernel size"></Label>
+            <ComboBox x:Name="CannyKernelSize" Grid.Row="1" Grid.Column="3" SelectedValuePath="Key" DisplayMemberPath="Value" ItemsSource="{Binding Source={StaticResource CannyKernelSizes}}" SelectedIndex="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20 0 0 0" Width="150" SelectionChanged="CannyKernelSize_SelectionChanged"></ComboBox>
+            <Label Grid.Row="2" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="20 0 0 0" FontSize="14" Content="Edge detection mode"></Label>
+            <ComboBox x:Name="ContouringMode" Grid.Row="3" Grid.Column="3" SelectedValuePath="Key" DisplayMemberPath="Value" ItemsSource="{Binding Source={StaticResource ContouringModes}}" SelectedIndex="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20 0 0 0" Width="150" SelectionChanged="ContouringMode_SelectionChanged"></ComboBox>
+            <Label Grid.Row="4" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="20 0 0 0" FontSize="14" Content="Edge detection method"></Label>
+            <ComboBox x:Name="ContouringMethod" Grid.Row="5" Grid.Column="3" SelectedValuePath="Key" DisplayMemberPath="Value" ItemsSource="{Binding Source={StaticResource ContouringMethods}}" SelectedIndex="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20 0 0 0" Width="150" SelectionChanged="ContouringMethod_SelectionChanged"></ComboBox>
+        </Grid>
+        <Button x:Name="CameraControl" Grid.Row="3" Grid.ColumnSpan="3" Content="Start camera" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5 10" Click="CameraControl_Click"></Button>
+    </Grid>
+</Window>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Drawing;
 using Emgu.CV;
@@ -10,7 +9,6 @@ using System.Collections.Generic;
 using System.Windows.Interop;
 using Emgu.CV.Util;
 using Emgu.CV.CvEnum;
-using System.IO;
 
 namespace GestureControl
 {

@@ -66,6 +66,7 @@ namespace GestureControl
         {
             Mat frame = new Mat();
             capture.Retrieve(frame, 0);
+            //preprocessing
             Image<Bgr, byte> finalImg = frame.ToImage<Bgr, byte>().Flip(FlipType.Horizontal);
             Image<Gray, byte> processingImg = finalImg.Convert<Gray, byte>();
             BiTonalLevel.Dispatcher.BeginInvoke(new Action(() =>
@@ -78,12 +79,15 @@ namespace GestureControl
                 if (BlurLevel.Value > 1)
                     CvInvoke.Blur(processingImg, processingImg, new System.Drawing.Size((int)BlurLevel.Value, (int)BlurLevel.Value), new System.Drawing.Point(-1, -1));
             }));
+            //morphological processing
             processingImg.MorphologyEx(firstMorphOp, kernel, new System.Drawing.Point(-1, -1), firstMorphSteps, BorderType.Default, new MCvScalar());
             if (doubleMorph)
                 processingImg.MorphologyEx(secondMorphOp, kernel2, new System.Drawing.Point(-1, -1), secondMorphSteps, BorderType.Default, new MCvScalar());
             ProcessingVideoBox.Dispatcher.BeginInvoke(new Action(() => ProcessingVideoBox.Source = ToBitmapSource(processingImg)));
+            //edge detection
             Mat edges = new Mat(frame.Size, frame.Depth, 1);
             CvInvoke.Canny(processingImg, edges, lowerTresholdLevel, upperTresholdLevel, cannyKernelSize);
+            //contours finding
             VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
             Mat hierarchy = new Mat();
             int largest_contour_index = 0;
@@ -99,6 +103,7 @@ namespace GestureControl
                 }
             }
             CvInvoke.DrawContours(finalImg, contours, largest_contour_index, redColor, 3, LineType.EightConnected, hierarchy);
+            //defects points finding
             VectorOfInt hull = new VectorOfInt();
             Mat defects = new Mat();
             if (contours.Size > 0)

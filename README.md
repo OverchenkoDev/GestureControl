@@ -31,7 +31,7 @@ On this step program is taking founded contours and is calculating their areas b
 Founded contours with points of defects will be used for matching different gesture templates in further development. It means that positions of defect points will be fixed on each frame and then after changing their moving will be matched with one of the hand gesture templates associated with some activity.
 
 ## Task list
-- [ ] Update EmguCV library to version 4.1.1
+- [x] Update EmguCV library to version 4.1.1
 - [ ] Program perfomance improving
 - [ ] Add some other edge detection algorithms
 - [ ] Add adaptive skin color detector for improved hand detection

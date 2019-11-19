@@ -83,7 +83,7 @@ namespace GestureControl
             processingImg.MorphologyEx(firstMorphOp, kernel, new System.Drawing.Point(-1, -1), firstMorphSteps, BorderType.Default, new MCvScalar());
             if (doubleMorph)
                 processingImg.MorphologyEx(secondMorphOp, kernel2, new System.Drawing.Point(-1, -1), secondMorphSteps, BorderType.Default, new MCvScalar());
-            ProcessingVideoBox.Dispatcher.BeginInvoke(new Action(() => ProcessingVideoBox.Source = ToBitmapSource(processingImg)));
+            ProcessingVideoBox.Dispatcher.BeginInvoke(new Action(() => ProcessingVideoBox.Source = ToBitmapGrey(processingImg)));
             //edge detection
             Mat edges = new Mat(frame.Size, frame.Depth, 1);
             CvInvoke.Canny(processingImg, edges, lowerTresholdLevel, upperTresholdLevel, cannyKernelSize);
@@ -123,12 +123,29 @@ namespace GestureControl
                     }
                 }
             }
-            MainVideoBox.Dispatcher.BeginInvoke(new Action(() => MainVideoBox.Source = ToBitmapSource(finalImg)));
+            MainVideoBox.Dispatcher.BeginInvoke(new Action(() => MainVideoBox.Source = ToBitmapFinal(finalImg)));
         }
 
-        public static BitmapSource ToBitmapSource(IImage image)
+        public static BitmapSource ToBitmapFinal(Image<Bgr, byte> image)
         {
-            using (Bitmap source = image.Bitmap)
+            using (Bitmap source = image.ToBitmap())
+            {
+                IntPtr ptr = source.GetHbitmap(); //obtain the Hbitmap
+
+                BitmapSource bs = Imaging.CreateBitmapSourceFromHBitmap(
+                    ptr,
+                    IntPtr.Zero,
+                    Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions());
+
+                DeleteObject(ptr); //release the HBitmap
+                return bs;
+            }
+        }
+
+        public static BitmapSource ToBitmapGrey(Image<Gray, byte> image)
+        {
+            using (Bitmap source = image.ToBitmap())
             {
                 IntPtr ptr = source.GetHbitmap(); //obtain the Hbitmap
 

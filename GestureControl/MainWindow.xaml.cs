@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Windows.Interop;
 using Emgu.CV.Util;
 using Emgu.CV.CvEnum;
+using DirectShowLib;
 
 namespace GestureControl
 {
@@ -46,6 +47,12 @@ namespace GestureControl
 
         private void CameraControl_Click(object sender, RoutedEventArgs e)
         {
+            DsDevice[] systemCameras = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
+            if (systemCameras.Length == 0)
+            {
+                MessageBox.Show("There are no connected webcams! Firstly connect the device.");
+                return;
+            }
             if (capture != null)
             {
                 if (CaptureInProgress)
